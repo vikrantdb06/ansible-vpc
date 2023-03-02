@@ -1,2 +1,3 @@
 - Ansible version 2.12.10
-- Python version :  3.8.10 and pip3/boto3
+- Python version :  3.8.10  
+- pip3/boto3
