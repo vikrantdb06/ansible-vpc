@@ -1,0 +1,89 @@
+---
+- name: VPC config
+  hosts: localhost
+  become: yes
+  tasks:
+    - ec2_vpc_net:
+        aws_access_key: AKIAQLC2VHMBMGDODSUP
+        aws_secret_key: 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
+        name: ansible-vpc
+        cidr_block: 10.10.0.0/16
+        region: us-east-1
+        state: present
+        tags: 
+          Name: ansible-vpc
+
+    - ec2_vpc_subnet:
+        aws_access_key: AKIAQLC2VHMBMGDODSUP
+        aws_secret_key: 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
+        az: us-east-1a
+        state: present
+        vpc_id: vpc-0258ccf153051dca0
+        cidr: 10.10.1.0/24
+        region: us-east-1 
+        tags:
+          Name: Application
+
+    - ec2_vpc_subnet:
+        aws_access_key: AKIAQLC2VHMBMGDODSUP
+        aws_secret_key: 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
+        az: us-east-1b
+        state: present
+        vpc_id: vpc-0258ccf153051dca0
+        cidr: 10.10.2.0/24
+        region: us-east-1 
+        tags:
+          Name: Testing
+
+    - ec2_vpc_igw:
+        aws_access_key: AKIAQLC2VHMBMGDODSUP
+        aws_secret_key: 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
+        region: us-east-1
+        state: present
+        vpc_id: vpc-0258ccf153051dca0
+
+    - ec2_vpc_route_table:
+        aws_access_key: AKIAQLC2VHMBMGDODSUP
+        aws_secret_key: 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 
+        vpc_id: vpc-0258ccf153051dca0
+        region: us-east-1
+        tags: 
+          Name: internet-testing
+        subnets:
+          - 10.10.2.0/24
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: igw-04b448542ece3d404
+
+    - ec2_vpc_nat_gateway:
+        aws_access_key: AKIAQLC2VHMBMGDODSUP
+        aws_secret_key: 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
+        state: present
+        subnet_id: subnet-0bf61277fa07d9b1f
+        wait: yes
+        region: us-east-1
+        if_exist_do_not_create: true
+        
+    - ec2_vpc_route_table:
+        aws_access_key: AKIAQLC2VHMBMGDODSUP
+        aws_secret_key: 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
+        vpc_id: vpc-0258ccf153051dca0
+        region: us-east-1
+        tags: 
+          Name: internet-testing
+        subnets:
+          - 10.10.1.0/24
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: nat-00b3f0ac26af8a004         
+               
+               
+
+
+
+        
+
+
+
+
+
